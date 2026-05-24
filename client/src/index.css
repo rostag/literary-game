@@ -1,0 +1,260 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Georgia, "Times New Roman", serif;
+  background: #f8f6f3;
+  color: #2c2c2c;
+  line-height: 1.6;
+}
+
+.app {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.app-header h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #4a3728;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+.error-banner {
+  background: #fde8e8;
+  color: #c53030;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.page {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+/* Mode toggle */
+.mode-toggle {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.mode-toggle button {
+  flex: 1;
+  padding: 0.6rem;
+  background: #f0ebe4;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  color: #6b5b4e;
+}
+
+.mode-toggle button.active {
+  background: #4a3728;
+  color: white;
+  font-weight: 600;
+}
+
+/* Form */
+.form h2 {
+  font-size: 1.2rem;
+  margin-bottom: 1.2rem;
+  color: #4a3728;
+}
+
+.form label {
+  display: block;
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #4a3728;
+}
+
+.form input,
+.form textarea {
+  display: block;
+  width: 100%;
+  margin-top: 0.3rem;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #ddd6cc;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  background: #faf9f7;
+}
+
+.form input:focus,
+.form textarea:focus {
+  outline: none;
+  border-color: #8b7355;
+  background: white;
+}
+
+.error {
+  display: block;
+  color: #c53030;
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+  font-weight: 400;
+}
+
+/* Buttons */
+.primary {
+  display: block;
+  width: 100%;
+  padding: 0.75rem;
+  background: #4a3728;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 0.5rem;
+}
+
+.primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.secondary {
+  display: block;
+  width: 100%;
+  padding: 0.75rem;
+  background: #f0ebe4;
+  color: #4a3728;
+  border: 1px solid #ddd6cc;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+/* Game */
+.turn-indicator {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.my-turn {
+  color: #2b6e3b;
+  font-weight: 700;
+}
+
+.waiting {
+  color: #8b7355;
+}
+
+.theme-badge {
+  display: inline-block;
+  background: #f0ebe4;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  color: #6b5b4e;
+  margin-bottom: 1.5rem;
+}
+
+.game-area {
+  min-height: 300px;
+}
+
+.prompt {
+  background: #faf9f7;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  border-left: 3px solid #8b7355;
+}
+
+.last-words {
+  font-style: italic;
+  font-size: 1.1rem;
+  color: #4a3728;
+  margin-top: 0.3rem;
+}
+
+.input-group {
+  margin-bottom: 1rem;
+}
+
+.input-group label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #4a3728;
+  margin-bottom: 0.3rem;
+}
+
+.input-group textarea {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #ddd6cc;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  background: #faf9f7;
+  resize: vertical;
+}
+
+.input-group textarea:focus {
+  outline: none;
+  border-color: #8b7355;
+  background: white;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.actions button {
+  flex: 1;
+}
+
+.waiting-screen {
+  text-align: center;
+  padding: 3rem 0;
+  color: #8b7355;
+}
+
+.waiting-screen p {
+  margin-bottom: 1.5rem;
+  font-size: 1.1rem;
+}
+
+/* Story text */
+.story-text {
+  background: #faf9f7;
+  padding: 1.5rem;
+  border-radius: 8px;
+  line-height: 1.8;
+  font-size: 1.05rem;
+  white-space: pre-wrap;
+  border-left: 3px solid #8b7355;
+}
+
+/* Lobby */
+.page ul {
+  list-style: none;
+  margin-top: 0.5rem;
+}
+
+.page ul li {
+  padding: 0.4rem 0;
+  border-bottom: 1px solid #f0ebe4;
+  font-size: 0.95rem;
+}
