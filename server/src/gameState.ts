@@ -16,6 +16,9 @@ export class GameStateManager {
       activePlayerId: null,
       fullRevealText: null,
       lastWords: [],
+      hostPlayerId: "",
+      revealProposedBy: null,
+      revealVotes: [],
     };
     this.rooms.set(id, state);
     return id;
@@ -35,6 +38,11 @@ export class GameStateManager {
       name,
     };
     room.players.push(player);
+
+    if (room.players.length === 1) {
+      room.hostPlayerId = player.id;
+    }
+
     return player;
   }
 
@@ -84,11 +92,75 @@ export class GameStateManager {
     return room;
   }
 
+  // Returns the updated GameState. If reveal was immediate, phase === "reveal".
+  // If a vote was recorded (pending), phase remains "playing" and revealProposedBy is set.
+  // Returns null on invalid request.
   reveal(roomId: string, playerId: string): GameState | null {
     const room = this.rooms.get(roomId);
     if (!room || room.phase !== "playing") return null;
     if (!room.players.find((p) => p.id === playerId)) return null;
 
+    const mode = room.config.revealMode;
+
+    if (mode === "host-only") {
+      if (playerId !== room.hostPlayerId) return null;
+      return this.doReveal(room);
+    }
+
+    if (mode === "host-approve") {
+      if (playerId === room.hostPlayerId) {
+        // Host approves → immediate reveal
+        room.revealProposedBy = null;
+        room.revealVotes = [];
+        return this.doReveal(room);
+      }
+      // Non-host proposes (only one proposal at a time)
+      if (room.revealProposedBy) return room; // already pending
+      room.revealProposedBy = playerId;
+      return room;
+    }
+
+    // consensus mode
+    if (!room.revealProposedBy) {
+      // First caller proposes
+      room.revealProposedBy = playerId;
+      room.revealVotes = [playerId];
+      return room;
+    }
+
+    // Subsequent caller agrees (ignore duplicate votes)
+    if (!room.revealVotes.includes(playerId)) {
+      room.revealVotes.push(playerId);
+    }
+
+    // Reveal when all players have voted
+    if (room.revealVotes.length >= room.players.length) {
+      room.revealProposedBy = null;
+      room.revealVotes = [];
+      return this.doReveal(room);
+    }
+
+    return room;
+  }
+
+  declineReveal(roomId: string, playerId: string): GameState | null {
+    const room = this.rooms.get(roomId);
+    if (!room || room.phase !== "playing") return null;
+    if (!room.players.find((p) => p.id === playerId)) return null;
+    if (!room.revealProposedBy) return null;
+
+    const mode = room.config.revealMode;
+    if (mode === "host-only") return null;
+
+    // Only the host can decline in host-approve; any non-proposer in consensus
+    if (mode === "host-approve" && playerId !== room.hostPlayerId) return null;
+
+    room.revealProposedBy = null;
+    room.revealVotes = [];
+    return room;
+  }
+
+  private doReveal(room: GameState): GameState {
     room.phase = "reveal";
     room.fullRevealText = this.assembleFullText(room);
     room.activePlayerId = null;

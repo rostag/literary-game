@@ -8,12 +8,15 @@ export interface Sentence {
   startedBy: string;
 }
 
+export type RevealMode = "consensus" | "host-approve" | "host-only";
+
 export interface GameConfig {
   numPlayers: number;
   gameTheme: string;
   sentencesCount: number;
   visibleWords: number;
   language: string;
+  revealMode: RevealMode;
 }
 
 export type GamePhase = "lobby" | "playing" | "reveal";
@@ -29,6 +32,9 @@ export interface GameState {
   activePlayerId: string | null;
   fullRevealText: string | null;
   lastWords: string[];
+  hostPlayerId: string;
+  revealProposedBy: string | null;
+  revealVotes: string[];
 }
 
 export interface CreateGameResponse {

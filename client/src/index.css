@@ -39,6 +39,7 @@ body {
   border-radius: 12px;
   padding: 2rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  position: relative;
 }
 
 /* Mode toggle */
@@ -259,20 +260,97 @@ body {
   font-size: 0.95rem;
 }
 
-/* Rules link */
+/* Top-right controls bar */
+.top-controls {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  z-index: 10;
+}
+
 .rules-link {
-  float: right;
   background: none;
   border: none;
   color: #8b7355;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   cursor: pointer;
   text-decoration: underline;
   font-family: inherit;
+  padding: 0;
 }
 
 .rules-link:hover {
   color: #4a3728;
+}
+
+.language-switcher-inline {
+  font-size: 0.8rem;
+  border: 1px solid #d4c4b0;
+  border-radius: 4px;
+  background: white;
+  color: #4a3728;
+  cursor: pointer;
+  padding: 0.1rem 0.3rem;
+}
+
+.reveal-trigger {
+  background: none;
+  border: 1px solid #c0a080;
+  border-radius: 4px;
+  color: #8b6048;
+  font-size: 0.75rem;
+  cursor: pointer;
+  font-family: inherit;
+  padding: 0.15rem 0.5rem;
+}
+
+.reveal-trigger:hover {
+  background: #f5ede3;
+  color: #4a3728;
+}
+
+/* Voting overlay */
+.voting-overlay {
+  background: #fff8f0;
+  border: 1px solid #e0c9a8;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.voting-prompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.voting-prompt p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #4a3728;
+}
+
+.voting-prompt .primary,
+.voting-prompt .secondary {
+  width: auto;
+  min-width: 100px;
+}
+
+.voting-waiting {
+  margin: 0;
+  color: #8b7355;
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+.start-over {
+  margin-top: 1.5rem;
+  display: block;
 }
 
 /* Modal */

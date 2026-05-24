@@ -12,13 +12,20 @@ const gameState = new GameStateManager();
 app.use(express.json());
 
 app.post("/api/create", (req, res) => {
-  const { numPlayers, gameTheme, sentencesCount, visibleWords } = req.body;
+  const { numPlayers, gameTheme, sentencesCount, visibleWords, revealMode } = req.body;
   if (numPlayers < 2 || sentencesCount < 1 || visibleWords < 1) {
     res.status(400).json({ error: "Invalid parameters" });
     return;
   }
 
-  const roomCode = gameState.createRoom({ numPlayers, gameTheme, sentencesCount, visibleWords, language: DEFAULT_LANGUAGE });
+  const roomCode = gameState.createRoom({
+    numPlayers,
+    gameTheme,
+    sentencesCount,
+    visibleWords,
+    language: DEFAULT_LANGUAGE,
+    revealMode: revealMode || "consensus",
+  });
   const player = gameState.addPlayer(roomCode, "Host");
   if (!player) {
     res.status(500).json({ error: "Failed to create room" });
@@ -100,8 +107,28 @@ app.post("/api/reveal", (req, res) => {
     return;
   }
 
-  console.log(`[GAME OVER] ${roomCode}:`, result.fullRevealText);
-  res.json({ fullText: result.fullRevealText });
+  if (result.phase === "reveal") {
+    console.log(`[GAME OVER] ${roomCode}:`, result.fullRevealText);
+    res.json({ gameState: result });
+  } else {
+    res.json({ gameState: result, pending: true });
+  }
+});
+
+app.post("/api/reveal/decline", (req, res) => {
+  const { roomCode, playerId } = req.body;
+  if (!roomCode || !playerId) {
+    res.status(400).json({ error: "Missing fields" });
+    return;
+  }
+
+  const result = gameState.declineReveal(roomCode, playerId);
+  if (!result) {
+    res.status(400).json({ error: "Cannot decline" });
+    return;
+  }
+
+  res.json({ gameState: result });
 });
 
 const DEFAULT_LANGUAGE = process.env.DEFAULT_LANGUAGE || "en";

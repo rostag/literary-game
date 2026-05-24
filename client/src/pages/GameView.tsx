@@ -8,12 +8,14 @@ export default function GameView({
   playerId,
   gameState,
   language: userLanguage,
+  onLanguageChange,
   onError,
 }: {
   roomCode: string;
   playerId: string;
   gameState: GameState | null;
   language: string;
+  onLanguageChange: (lang: string) => void;
   onError: (err: string | null) => void;
 }) {
   const [completion, setCompletion] = useState("");
@@ -25,6 +27,17 @@ export default function GameView({
   const lang = userLanguage || gs?.config.language || "en";
   const { t, translateServerError } = useTranslation(lang);
 
+  const mode = gs?.config.revealMode ?? "consensus";
+  const isHost = gs ? playerId === gs.hostPlayerId : false;
+  const hasPendingReveal = gs?.revealProposedBy != null;
+  const isProposer = gs?.revealProposedBy === playerId;
+
+  // Show reveal trigger: host-only → only host; others → anyone when no pending proposal
+  const canTriggerReveal =
+    gs?.phase === "playing" &&
+    !hasPendingReveal &&
+    (mode === "host-only" ? isHost : true);
+
   async function copyJoinLink(url: string) {
     try {
       await navigator.clipboard.writeText(url);
@@ -35,16 +48,82 @@ export default function GameView({
     }
   }
 
-  const rulesLink = (
-    <button className="rules-link" onClick={() => setShowRules(true)}>
-      {t("game.rules")}
-    </button>
+  async function handleReveal() {
+    onError(null);
+    try {
+      const res = await fetch("/api/reveal", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ roomCode, playerId }),
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        onError(translateServerError(data.error) || t("error.invalidTurn"));
+      }
+    } catch {
+      onError(t("error.network"));
+    }
+  }
+
+  async function handleDeclineReveal() {
+    onError(null);
+    try {
+      await fetch("/api/reveal/decline", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ roomCode, playerId }),
+      });
+    } catch {
+      onError(t("error.network"));
+    }
+  }
+
+  const topControls = (
+    <div className="top-controls">
+      <button className="rules-link" onClick={() => setShowRules(true)}>
+        {t("game.rules")}
+      </button>
+      <select
+        className="language-switcher-inline"
+        value={lang}
+        onChange={(e) => onLanguageChange(e.target.value)}
+      >
+        <option value="en">EN</option>
+        <option value="uk">УК</option>
+      </select>
+      {canTriggerReveal && (
+        <button className="reveal-trigger" onClick={handleReveal}>
+          {t("game.revealAll")}
+        </button>
+      )}
+    </div>
   );
+
+  // Voting overlay shown to non-proposers when a reveal is pending
+  const votingOverlay = gs?.phase === "playing" && hasPendingReveal ? (
+    <div className="voting-overlay">
+      {isProposer ? (
+        <p className="voting-waiting">{t("reveal.waiting")}</p>
+      ) : (mode === "host-approve" && isHost) ? (
+        <div className="voting-prompt">
+          <p>{t("reveal.approvePrompt")}</p>
+          <button className="primary" onClick={handleReveal}>{t("reveal.approve")}</button>
+          <button className="secondary" onClick={handleDeclineReveal}>{t("reveal.decline")}</button>
+        </div>
+      ) : mode === "consensus" && !isProposer ? (
+        <div className="voting-prompt">
+          <p>{t("reveal.agreePrompt")}</p>
+          <button className="primary" onClick={handleReveal}>{t("reveal.agree")}</button>
+          <button className="secondary" onClick={handleDeclineReveal}>{t("reveal.decline")}</button>
+        </div>
+      ) : null}
+    </div>
+  ) : null;
 
   if (!gs) {
     return (
       <div className="page">
-        {rulesLink}
+        {topControls}
         <h2>{t("game.loading")}</h2>
         <p>{t("game.room")} {roomCode}</p>
         {showRules && <RulesModal language={lang} onClose={() => setShowRules(false)} />}
@@ -56,7 +135,7 @@ export default function GameView({
     const joinUrl = `${window.location.origin}/join/${gs.id}`;
     return (
       <div className="page">
-        {rulesLink}
+        {topControls}
         <h2>{t("lobby.heading")}</h2>
         <p><strong>{t("lobby.roomCode")}</strong> {gs.id}</p>
         <p><strong>{t("lobby.theme")}</strong> {gs.config.gameTheme}</p>
@@ -87,7 +166,7 @@ export default function GameView({
     const startSentence = gs.sentences[0]?.fullText;
     return (
       <div className="page">
-        {rulesLink}
+        {topControls}
         <h2>{t("reveal.heading")}</h2>
         {startSentence && (
           <div className="starting-sentence">
@@ -96,6 +175,9 @@ export default function GameView({
           </div>
         )}
         <div className="story-text">{gs.fullRevealText}</div>
+        <button className="secondary start-over" onClick={() => { window.location.href = "/"; }}>
+          {t("game.startOver")}
+        </button>
         {showRules && <RulesModal language={lang} onClose={() => setShowRules(false)} />}
       </div>
     );
@@ -124,22 +206,10 @@ export default function GameView({
     }
   }
 
-  async function handleReveal() {
-    onError(null);
-    try {
-      await fetch("/api/reveal", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ roomCode, playerId }),
-      });
-    } catch {
-      onError(t("error.network"));
-    }
-  }
-
   return (
     <div className="page">
-      {rulesLink}
+      {topControls}
+      {votingOverlay}
       <div className="turn-indicator">
         <span className={isMyTurn ? "my-turn" : "waiting"}>
           {isMyTurn ? t("game.yourTurn") : t("game.waiting")}
@@ -191,17 +261,11 @@ export default function GameView({
               <button className="primary" onClick={handleSubmit} disabled={!completion.trim() || !newSentence.trim()}>
                 {t("game.submit")}
               </button>
-              <button className="secondary" onClick={handleReveal}>
-                {t("game.revealAll")}
-              </button>
             </div>
           </>
         ) : (
           <div className="waiting-screen">
             <p>{t("game.waitingActive")}</p>
-            <button className="secondary" onClick={handleReveal}>
-              {t("game.revealAll")}
-            </button>
           </div>
         )}
       </div>

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "../i18n/useTranslation";
-import type { GameConfig } from "../../../shared/types";
+import type { GameConfig, RevealMode } from "../../../shared/types";
 
 export default function CreateGame({
   language,
@@ -21,6 +21,7 @@ export default function CreateGame({
     sentencesCount: 5,
     visibleWords: 3,
     language,
+    revealMode: "consensus",
   });
   const [errors, setErrors] = useState<Partial<Record<keyof GameConfig, string>>>({});
   const [joinCode, setJoinCode] = useState(urlRoomCode || "");
@@ -143,6 +144,18 @@ export default function CreateGame({
               onChange={(e) => setConfig({ ...config, visibleWords: Math.max(1, parseInt(e.target.value) || 1) })}
             />
             {errors.visibleWords && <span className="error">{errors.visibleWords}</span>}
+          </label>
+
+          <label>
+            {t("create.revealMode")}
+            <select
+              value={config.revealMode}
+              onChange={(e) => setConfig({ ...config, revealMode: e.target.value as RevealMode })}
+            >
+              <option value="consensus">{t("create.revealMode.consensus")}</option>
+              <option value="host-approve">{t("create.revealMode.hostApprove")}</option>
+              <option value="host-only">{t("create.revealMode.hostOnly")}</option>
+            </select>
           </label>
 
           <button className="primary" onClick={handleCreate} disabled={loading}>

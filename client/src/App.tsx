@@ -27,14 +27,16 @@ export default function App() {
     <div className="app">
       <header className="app-header">
         <h1>{t("app.title")}</h1>
-        <select
-          className="language-switcher"
-          value={language}
-          onChange={(e) => handleLanguageChange(e.target.value)}
-        >
-          <option value="en">English</option>
-          <option value="uk">Українська</option>
-        </select>
+        {!roomCode && (
+          <select
+            className="language-switcher"
+            value={language}
+            onChange={(e) => handleLanguageChange(e.target.value)}
+          >
+            <option value="en">English</option>
+            <option value="uk">Українська</option>
+          </select>
+        )}
       </header>
       {error && <div className="error-banner">{error}</div>}
       <Routes>
@@ -60,6 +62,7 @@ export default function App() {
                 playerId={playerId || ""}
                 gameState={gameState}
                 language={language}
+                onLanguageChange={handleLanguageChange}
                 onError={setError}
               />
             ) : (
