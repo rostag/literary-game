@@ -15,11 +15,11 @@ export default function RulesModal({
         <button className="modal-close" onClick={onClose}>&times;</button>
         <h2>{t("game.rulesTitle")}</h2>
         <ol>
-          <li>Each player writes a sentence and deliberately leaves it unfinished.</li>
-          <li>The next player sees only the last few words of that sentence and must complete it before starting their own.</li>
-          <li>Play continues round-robin until all turns are complete.</li>
-          <li>Anyone can request a reveal at any time to see the full story.</li>
-          <li>The game ends automatically when the sentence limit is reached.</li>
+          <li>{t("game.rule1")}</li>
+          <li>{t("game.rule2")}</li>
+          <li>{t("game.rule3")}</li>
+          <li>{t("game.rule4")}</li>
+          <li>{t("game.rule5")}</li>
         </ol>
       </div>
     </div>

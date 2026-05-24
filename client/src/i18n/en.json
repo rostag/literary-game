@@ -57,5 +57,10 @@
   "lobby.copied": "Copied!",
   "lobby.copyLink": "Copy",
   "game.rules": "Rules",
-  "game.rulesTitle": "Game Rules"
+  "game.rulesTitle": "Game Rules",
+  "game.rule1": "Each player writes a sentence and deliberately leaves it unfinished.",
+  "game.rule2": "The next player sees only the last few words of that sentence and must complete it before starting their own.",
+  "game.rule3": "Play continues round-robin until all turns are complete.",
+  "game.rule4": "Anyone can request a reveal at any time to see the full story.",
+  "game.rule5": "The game ends automatically when the sentence limit is reached."
 }
