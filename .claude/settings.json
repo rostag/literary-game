@@ -1,15 +1,5 @@
 {
   "permissions": {
-    "allow": [
-      "Bash(openspec --help)",
-      "Read(//Users/sirykr/.claude/**)",
-      "Bash(openspec instructions *)",
-      "Bash(openspec list *)",
-      "Bash(mkdir -p .claude/commands)",
-      "Bash(openspec status *)"
-    ],
-    "additionalDirectories": [
-      "/Users/sirykr/dev/exp/openspec-test/intent-driven-template/.claude"
-    ]
+    "allow": ["Bash(openspec status *)", "Bash(openspec instructions *)"]
   }
 }
