@@ -258,3 +258,125 @@ body {
   border-bottom: 1px solid #f0ebe4;
   font-size: 0.95rem;
 }
+
+/* Rules link */
+.rules-link {
+  float: right;
+  background: none;
+  border: none;
+  color: #8b7355;
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-decoration: underline;
+  font-family: inherit;
+}
+
+.rules-link:hover {
+  color: #4a3728;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 480px;
+  width: 90%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  position: relative;
+}
+
+.modal-content h2 {
+  font-size: 1.2rem;
+  color: #4a3728;
+  margin-bottom: 1rem;
+}
+
+.modal-content ol {
+  padding-left: 1.2rem;
+  color: #2c2c2c;
+  line-height: 1.8;
+  font-size: 0.95rem;
+}
+
+.modal-close {
+  position: absolute;
+  top: 0.5rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #8b7355;
+  line-height: 1;
+}
+
+.modal-close:hover {
+  color: #4a3728;
+}
+
+/* Join URL */
+.join-url {
+  margin-top: 1rem;
+}
+
+.join-url strong {
+  font-size: 0.85rem;
+  color: #4a3728;
+}
+
+.join-url-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+}
+
+.join-url-row input {
+  flex: 1;
+  padding: 0.5rem 0.7rem;
+  border: 1px solid #ddd6cc;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-family: inherit;
+  background: #faf9f7;
+  color: #4a3728;
+}
+
+.join-url-row button {
+  flex: 0 0 auto;
+  width: auto;
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+}
+
+/* Starting sentence on reveal */
+.starting-sentence {
+  background: #f0ebe4;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.starting-sentence strong {
+  font-size: 0.8rem;
+  color: #8b7355;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.starting-text {
+  font-style: italic;
+  font-size: 1rem;
+  color: #4a3728;
+  margin-top: 0.3rem;
+}

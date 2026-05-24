@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "../i18n/useTranslation";
+import RulesModal from "./RulesModal";
 import type { GameState } from "../../../shared/types";
 
 export default function GameView({
@@ -17,23 +18,45 @@ export default function GameView({
 }) {
   const [completion, setCompletion] = useState("");
   const [newSentence, setNewSentence] = useState("");
+  const [showRules, setShowRules] = useState(false);
+  const [copyMsg, setCopyMsg] = useState("");
 
   const gs = gameState;
   const lang = userLanguage || gs?.config.language || "en";
   const { t, translateServerError } = useTranslation(lang);
 
+  async function copyJoinLink(url: string) {
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopyMsg(t("lobby.copied"));
+      setTimeout(() => setCopyMsg(""), 2000);
+    } catch {
+      setCopyMsg("");
+    }
+  }
+
+  const rulesLink = (
+    <button className="rules-link" onClick={() => setShowRules(true)}>
+      {t("game.rules")}
+    </button>
+  );
+
   if (!gs) {
     return (
       <div className="page">
+        {rulesLink}
         <h2>{t("game.loading")}</h2>
         <p>{t("game.room")} {roomCode}</p>
+        {showRules && <RulesModal language={lang} onClose={() => setShowRules(false)} />}
       </div>
     );
   }
 
   if (gs.phase === "lobby") {
+    const joinUrl = `${window.location.origin}/join/${gs.id}`;
     return (
       <div className="page">
+        {rulesLink}
         <h2>{t("lobby.heading")}</h2>
         <p><strong>{t("lobby.roomCode")}</strong> {gs.id}</p>
         <p><strong>{t("lobby.theme")}</strong> {gs.config.gameTheme}</p>
@@ -45,16 +68,35 @@ export default function GameView({
             <li key={p.id}>{p.name} {p.id === playerId ? t("lobby.you") : ""}</li>
           ))}
         </ul>
+        <div className="join-url">
+          <strong>{t("lobby.joinUrl")}</strong>
+          <div className="join-url-row">
+            <input readOnly value={joinUrl} onClick={(e) => (e.target as HTMLInputElement).select()} />
+            <button className="secondary" onClick={() => copyJoinLink(joinUrl)}>
+              {copyMsg || t("lobby.copyLink")}
+            </button>
+          </div>
+        </div>
         {gs.players.length < gs.config.numPlayers && <p>{t("lobby.waiting")}</p>}
+        {showRules && <RulesModal language={lang} onClose={() => setShowRules(false)} />}
       </div>
     );
   }
 
   if (gs.phase === "reveal") {
+    const startSentence = gs.sentences[0]?.fullText;
     return (
       <div className="page">
+        {rulesLink}
         <h2>{t("reveal.heading")}</h2>
+        {startSentence && (
+          <div className="starting-sentence">
+            <p><strong>{t("reveal.startingSentence")}</strong></p>
+            <p className="starting-text">{startSentence}</p>
+          </div>
+        )}
         <div className="story-text">{gs.fullRevealText}</div>
+        {showRules && <RulesModal language={lang} onClose={() => setShowRules(false)} />}
       </div>
     );
   }
@@ -97,6 +139,7 @@ export default function GameView({
 
   return (
     <div className="page">
+      {rulesLink}
       <div className="turn-indicator">
         <span className={isMyTurn ? "my-turn" : "waiting"}>
           {isMyTurn ? t("game.yourTurn") : t("game.waiting")}
@@ -162,6 +205,8 @@ export default function GameView({
           </div>
         )}
       </div>
+
+      {showRules && <RulesModal language={lang} onClose={() => setShowRules(false)} />}
     </div>
   );
 }

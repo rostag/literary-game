@@ -51,5 +51,11 @@
   "error.gameFull": "Гра заповнена",
   "error.invalidParams": "Недійсні параметри",
   "error.missingFields": "Відсутні поля",
-  "error.cannotReveal": "Неможливо розкрити"
+  "error.cannotReveal": "Неможливо розкрити",
+  "reveal.startingSentence": "Початкове речення:",
+  "lobby.joinUrl": "Посилання для інших:",
+  "lobby.copied": "Скопійовано!",
+  "lobby.copyLink": "Копіювати",
+  "game.rules": "Правила",
+  "game.rulesTitle": "Правила гри"
 }

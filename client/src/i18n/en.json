@@ -51,5 +51,11 @@
   "error.gameFull": "Game is full",
   "error.invalidParams": "Invalid parameters",
   "error.missingFields": "Missing fields",
-  "error.cannotReveal": "Cannot reveal"
+  "error.cannotReveal": "Cannot reveal",
+  "reveal.startingSentence": "Starting sentence:",
+  "lobby.joinUrl": "Share this link:",
+  "lobby.copied": "Copied!",
+  "lobby.copyLink": "Copy",
+  "game.rules": "Rules",
+  "game.rulesTitle": "Game Rules"
 }
