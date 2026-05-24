@@ -1,30 +1,31 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "../i18n/useTranslation";
 import type { GameConfig } from "../../../shared/types";
 
-const DEFAULT_LANG = "en";
-
 export default function CreateGame({
+  language,
   onJoin,
   onError,
 }: {
+  language: string;
   onJoin: (roomCode: string, playerId: string) => void;
   onError: (err: string | null) => void;
 }) {
   const navigate = useNavigate();
-  const { t, translateServerError } = useTranslation(DEFAULT_LANG);
+  const { roomCode: urlRoomCode } = useParams<{ roomCode: string }>();
+  const { t, translateServerError } = useTranslation(language);
   const [config, setConfig] = useState<GameConfig>({
     numPlayers: 3,
     gameTheme: "",
     sentencesCount: 5,
     visibleWords: 3,
-    language: DEFAULT_LANG,
+    language,
   });
   const [errors, setErrors] = useState<Partial<Record<keyof GameConfig, string>>>({});
-  const [joinCode, setJoinCode] = useState("");
+  const [joinCode, setJoinCode] = useState(urlRoomCode || "");
   const [playerName, setPlayerName] = useState("");
-  const [mode, setMode] = useState<"create" | "join">("create");
+  const [mode, setMode] = useState<"create" | "join">(urlRoomCode ? "join" : "create");
   const [loading, setLoading] = useState(false);
 
   function validate(): boolean {

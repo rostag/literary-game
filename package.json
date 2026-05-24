@@ -2,7 +2,9 @@
   "name": "literary-game",
   "private": true,
   "scripts": {
-    "dev": "concurrently --names server,client --prefix-colors blue,green \"npm run dev --prefix server\" \"npm run dev --prefix client\""
+    "dev": "concurrently --names server,client --prefix-colors blue,green \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
+    "build": "concurrently --names server,client --prefix-colors blue,green \"npm run build --prefix server\" \"npm run build --prefix client\"",
+    "start": "npm run start --prefix server"
   },
   "devDependencies": {
     "concurrently": "^9.1.2"

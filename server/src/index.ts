@@ -1,6 +1,10 @@
 import express from "express";
+import path from "path";
+import { fileURLToPath } from "url";
 import type { GameState } from "../../shared/types";
 import { GameStateManager } from "./gameState";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const app = express();
 const gameState = new GameStateManager();
@@ -102,6 +106,15 @@ app.post("/api/reveal", (req, res) => {
 
 const DEFAULT_LANGUAGE = process.env.DEFAULT_LANGUAGE || "en";
 const PORT = process.env.PORT || 3001;
+
+if (process.env.NODE_ENV === "production") {
+  const clientDist = path.resolve(__dirname, "../../client/dist");
+  app.use(express.static(clientDist));
+  app.get("*", (_req, res) => {
+    res.sendFile(path.join(clientDist, "index.html"));
+  });
+}
+
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
   console.log(`Default language: ${DEFAULT_LANGUAGE}`);

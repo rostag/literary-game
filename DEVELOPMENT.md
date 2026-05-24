@@ -25,6 +25,18 @@ This starts both the server (port 3001) and client (port 5173) with distinguisha
 > # → http://localhost:5173
 > ```
 
+## Build & Run (Production)
+
+```bash
+# Build both server and client
+npm run build
+
+# Start production server (serves built client at http://localhost:3001)
+NODE_ENV=production npm run start
+```
+
+> **Note**: The production server serves the built client from `client/dist/`. Run `npm run build` before starting.
+
 ## Project Architecture
 
 ```

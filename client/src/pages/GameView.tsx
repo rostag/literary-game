@@ -6,19 +6,21 @@ export default function GameView({
   roomCode,
   playerId,
   gameState,
+  language: userLanguage,
   onError,
 }: {
   roomCode: string;
   playerId: string;
   gameState: GameState | null;
+  language: string;
   onError: (err: string | null) => void;
 }) {
   const [completion, setCompletion] = useState("");
   const [newSentence, setNewSentence] = useState("");
 
   const gs = gameState;
-  const language = gs?.config.language || "en";
-  const { t, translateServerError } = useTranslation(language);
+  const lang = userLanguage || gs?.config.language || "en";
+  const { t, translateServerError } = useTranslation(lang);
 
   if (!gs) {
     return (
